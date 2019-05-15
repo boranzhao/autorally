@@ -34,7 +34,7 @@
 
 //Some versions of boost require __CUDACC_VER__, which is no longer defined in CUDA 9. This is
 //the old expression for how it was defined, so should work for CUDA 9 and under.
-#define __CUDACC_VER__ __CUDACC_VER_MAJOR__ * 10000 + __CUDACC_VER_MINOR__ * 100 + __CUDACC_VER_BUILD__
+#define __CUDACC_VER__ __CUDACC_VER_MAJOR__ * 10000 + __CUDACC_VER_MINOR__ * 100 + __CUDACC_VER_BUILD__  // not needed anymore 
 
 #include <autorally_control/path_integral/meta_math.h>
 #include <autorally_control/path_integral/param_getter.h>
@@ -104,7 +104,8 @@ int main(int argc, char** argv) {
                                     init_u, params.num_iters, optimization_stride);
 
   AutorallyPlant* robot = new AutorallyPlant(mppi_node, mppi_node, params.debug_mode, params.hz, false);
-
+  
+  
   //Setup dynamic reconfigure callback
   dynamic_reconfigure::Server<PathIntegralParamsConfig> server;
   dynamic_reconfigure::Server<PathIntegralParamsConfig>::CallbackType callback_f;
@@ -116,7 +117,7 @@ int main(int argc, char** argv) {
   std::atomic<bool> is_alive(true);
   optimizer = boost::thread(&runControlLoop<Controller>, mppi, robot, &params, &mppi_node, &is_alive);
 
-  ros::spin();
+  ros::spin(); //run it for ever
 
   //Shutdown procedure
   is_alive.store(false);
